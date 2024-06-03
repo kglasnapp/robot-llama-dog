@@ -3,40 +3,56 @@ import time
 import math
 from robotLegs import legs
 
-# Balanced with front right leg lifted
-# Servo:0 - 119.9
-# Servo:1 - 119.9
-# Servo:2 - 90.0
-# Servo:4 - 89.9
-# Servo:5 - 59.9
-# Servo:6 - 89.9
-# Servo:8 - 89.9
-# Servo:9 - 59.8
-# Servo:10 - 90.0
-# Servo:12 - 59.9
-# Servo:13 - 119.9
-# Servo:14 - 89.9
+def setAngleNorm(servo, angle):
+        angle = adjustAngle(servo, angle, True)
+        legs.setAngle(servo,angle)
+
+def walk():
+   # Set intial postion of robot
+   asyncio.run(action([[[0,4],90],[[8,12],90],[[1,5],131],[[9,13], 160],[[2,14],86],[6,95]],.5,normalize=True))
+   time.sleep(1)
+   for i in range(5):
+     moveForWalk(0)
+     time.sleep(.3)
+     #moveForWalk(8)
+     #time.sleep(.3)
+     #moveForWalk(4)
+     #time.sleep(.3)
+     moveForWalk(12)
+     time.sleep(.3)
+
+def moveForWalk(group):
+   print("Move for Walk group:%d" % (group))
+   # On floor
+   delay = .1
+   setAngleNorm(group + 0,90)
+   setAngleNorm(group + 1,131)
+   
+   time.sleep(delay)
+
+   # Raise
+   setAngleNorm(group + 0,75)
+   setAngleNorm(group + 1,134)
+   time.sleep(delay)
+
+   # Move
+   setAngleNorm(group + 0,45)
+   setAngleNorm(group + 1,85)
+   time.sleep(delay)
+
+   # Down
+   setAngleNorm(group + 0,50)
+   setAngleNorm(group + 1,85)
+   time.sleep(delay)
+
+    # On floor Back
+   setAngleNorm(group + 0,90)
+   setAngleNorm(group + 1,131)
+   time.sleep(delay)
 
 
-# def testBalanceOS():
-#    for servo in [0,8,12,4]:
-#       initForward(servo)
-#        # Init
-#       #setAngle(servo+2, 80)
-#    time.sleep(5)
-#    for servo in [0,8,12,4]:
-#       moveBack(servo)
-
-
-# def initForward(servo):
-#    # Forward
-#     setAngle(servo+1, 109)
-#     setAngle(servo+0, 68)
-
-# def moveBack(servo):
-#     # Back
-#     setAngle(servo+1, 131)
-#     setAngle(servo+0, 90)
+def asyncLiftRightLeg():
+    asyncio.run(action([[0,120],[1,120],[2,90],[4,90],[5,60],[6,90],[8,90],[9,60],[10,90],[12,60],[13,120],[14,90]],.5))
 
 def asyncTestBalance():
      asyncio.run(action([[[0,4],90],[[8,12],68],[[1,9,13,5],109]],.5,normalize=True))
@@ -65,6 +81,8 @@ def adjustAngle(servo, angle, normalize):
          group = int(servo / 4)
          if group == 1 or group == 2:
            angle = 180 - angle
+         if servo == 14 or servo == 10:
+             angle = 180-angle
     return angle
 
 async def action(actions, speed, normalize=False ):

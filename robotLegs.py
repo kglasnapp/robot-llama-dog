@@ -3,10 +3,11 @@ import movements
 from myServo import servos
 
 
+
 class Legs:
     # Servo Ranges -> {low value, high value, default value, offsets for each leg}
     lowServo = [0, 175, 90, 0, 0, 0, 0]
-    highServo = [0, 175, 90, 0, 0, 3, 0]
+    highServo = [0, 175, 90, 0, 0, 3, 4]
     hipServo = [70, 110, 90, 8, 12, 9, 14]
     ranges = [lowServo, highServo, hipServo]
     angles = []
@@ -68,6 +69,8 @@ class Legs:
             except:
               print("Tried to set angle to %.2f actual %.2f for servo:%d" % (angle, angle + self.getOffset(servo), servo))
 
+    
+
     def relaxServo(self, servo):
         servos[servo].angle = None
         # servo.relaxServo(servo)
@@ -108,7 +111,7 @@ class Legs:
         for i in range(len(angles)):
             if i % 4 != 3:
                 print("Servo:%d - %.1f" % (i, angles[i]))
-                s += "[%d,%f]," % (i,round(angles[i]),1)
+                s += "[%d,%.1f]," % (i,round(angles[i]))
         s = s[:-1] + "]"
         print(s)
 
