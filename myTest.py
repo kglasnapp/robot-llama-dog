@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 import util
-import sys
-import select
-import board
 import time
 import monitorCurrentVoltage
 import lcd
@@ -91,6 +88,9 @@ def task(s):
             if len(legVal) == 2:
                 print(legVal)
                 controlPattern.control(int(legVal[1]))
+        if legVal[0] == 'f':
+            if len(legVal) == 2:
+                controlPattern.runFile(legVal[1])
         if result == "d":
             m.dance()
         if len(legVal) == 2 and legVal[0] == "e":
@@ -166,18 +166,7 @@ class DisplayThread(Thread):
 
 
 
-# Show all of the I2C saddresses on the bus
-# print("Show I2C Addresses")
-# util.showI2C()
-# print("Open Servo Controller")
-# servosMove = robotLegs.moveServos()
 monCurVolt = monitorCurrentVoltage.MonitorCurrentVoltage()
-# robotLegs.legs.setDefaults()
-# time.sleep(.2)
-# strToMovements(m.lowerAction(),.5)
-# time.sleep(0.2)
-# strToMovements(m.higherAction(), .5)
-# time.sleep(0.2)
 print("Ready for input from serial port")
 
 print(help_)

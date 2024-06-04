@@ -67,7 +67,7 @@ def asyncSit():
   asyncio.run(action([[0,90],[1,90],[12,140],[13,90],[4,90],[5,90],[8,40],[9,90]],.5))
    
 def asyncM():
-  asyncio.run(action([[1, 70],[5, 70],[9, 70],[13, 70]],1))
+  asyncio.run(action([[1, 70],[5, 70],[2],[9, 70],[13, 70]],1))
 
 def lowerAsync():
   asyncio.run(action([[2,90],[6,90],[10,90],[14,90],[0, 60],[1, 160],[12, 60],[13, 160],[4, 120],[5, 30],[8, 120],[9,30]],2))
@@ -88,7 +88,10 @@ def adjustAngle(servo, angle, normalize):
 async def action(actions, speed, normalize=False ):
     tasks = []
     for act in actions:
-        print(act)
+        print("act:", act)
+        if len(act) == 1:
+            await asyncio.sleep(act[0])
+            continue
         if  type(act[0]) is list:
             for a in act[0]:
                 angle = adjustAngle(a,act[1],normalize)

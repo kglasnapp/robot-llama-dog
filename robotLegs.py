@@ -36,7 +36,7 @@ class Legs:
         if angle is None:
             # Get the default angle
             angle = self.ranges[servo % 4][2]
-        return angle - self.getOffset(servo)
+        return round(angle - self.getOffset(servo),2)
 
     def angleOk(self, servo, angle):
         if servo % 4 != 3:

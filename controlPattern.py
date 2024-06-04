@@ -3,6 +3,7 @@ import getch
 from datetime import datetime
 import os
 import movements as m
+import json
 
 def control(servo):
     s = ""
@@ -32,7 +33,7 @@ def control(servo):
             if delta <= 0: delta = 0
             print("decrease delta new delta:", delta)
         if c == ".":
-            p = "[%d,%.1f][%d,%.1f],[%d,%.1f]," % (startServo, round(m.legs.getAngle(startServo),1),
+            p = "[%d,%.1f],[%d,%.1f],[%d,%.1f]," % (startServo, round(m.legs.getAngle(startServo),1),
                                          startServo+1,round(m.legs.getAngle(startServo+1),1),
                                          startServo+2,round(m.legs.getAngle(startServo+2),1))
             print("Pattern:", p)
@@ -42,8 +43,9 @@ def control(servo):
             print("Pattern:", p)
             pattern += p
         if c == "w":
-            s = input("Type of control string")
-            fn =  os.getcwd() + "/patterns/" + s + " " + datetime.now().strftime("%m-%d %H:%M:%S.pat")
+            s = input("Control type >")
+            #fn =  os.getcwd() + "/patterns/" + s + " " + datetime.now().strftime("%m-%d %H:%M:%S.pat")
+            fn =  os.getcwd() + "/patterns/" + s + ".pat"
             pattern = pattern[:-1] + "]"
             print("Write pattern %s to file %s" % (pattern, fn))
             with open(fn, "w") as text_file:
@@ -62,7 +64,7 @@ def control(servo):
                 #print("down arrow")
             elif key == 65:  # Up arrow
                 asyncServo.asyncMove( [[startServo, m.legs.getAngle(startServo) - delta]], speed )
-                print("up arrow")
+                #print("up arrow")
             elif key == 67:  # right arrow
                 asyncServo.asyncMove([[startServo+1, m.legs.getAngle(startServo+1) - delta]],speed)
                 #print("right arrow")
@@ -78,3 +80,22 @@ def control(servo):
 
         else:
             s += chr(key)
+
+
+def runFile(fn):
+  try:
+    fn =  os.getcwd() + "/patterns/" + fn + ".pat"
+    f = open(fn, 'r')
+    s = f.read()
+    f.close()
+    print("s:", s)
+    ar = json.loads(s)
+    print("ar:", ar)
+    asyncServo.asyncMove(ar, .5)
+  except FileNotFoundError:
+    print('File %s does not exist' % (fn))
+    return
+  #except:
+   #   print("Error processing file")
+
+ 
